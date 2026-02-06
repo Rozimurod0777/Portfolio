@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ORIS STUDIO - Ultimate Portfolio</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&family=Orbitron:wght@400;700;900&family=Playfair+Display:wght@400;700;900&family=Lato:wght@300;400;700&family=Montserrat:wght@300;400;600;800;900&family=Inter:wght@300;400;600;700;900&family=Fira+Code:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #0a0a0f;
+            --bg-card: rgba(15, 15, 25, 0.8);
+            --electric-blue: #00d4ff;
+            --neon-purple: #b800ff;
+            --crimson-red: #ff0055;
+            --text-white: #ffffff;
+            --text-gray: #a0a0b0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-white);
+            overflow-x: hidden;
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-dark);
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            transition: opacity 0.5s, visibility 0.5s;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .loader {
+            width: 80px;
+            height: 80px;
+            border: 4px solid transparent;
+            border-top: 4px solid var(--electric-blue);
+            border-right: 4px solid var(--neon-purple);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            background: linear-gradient(90deg, var(--electric-blue), var(--neon-purple), var(--crimson-red));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Particles Background */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 0;
+        }
+
+        .bg-gradient {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            background: radial-gradient(circle at 20% 50%, rgba(0, 212, 255, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 50%, rgba(184, 0, 255, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 50% 80%, rgba(255, 0, 85, 0.1) 0%, transparent 50%);
+            animation: gradientShift 15s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Main Pages Container */
+        .page {
+            display: none;
+            min-height: 100vh;
+            position: relative;
+            z-index: 2;
+        }
+
+        .page.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Container */
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* HOME PAGE STYLES */
+        header {
+            padding: 100px 0 80px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(3rem, 8vw, 7rem);
+            font-weight: 900;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--electric-blue), var(--neon-purple), var(--crimson-red));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 5px;
+            animation: glowPulse 3s ease infinite;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { filter: drop-shadow(0 0 20px rgba(0, 212, 255, 0.5)); }
+            50% { filter: drop-shadow(0 0 40px rgba(184, 0, 255, 0.8)); }
+        }
+
+        .header-subtitle {
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            font-weight: 300;
+            color: var(--text-gray);
+            margin-bottom: 40px;
+            letter-spacing: 2px;
+        }
+
+        .header-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .header-link {
+            padding: 15px 40px;
+            background: linear-gradient(135deg, var(--electric-blue), var(--neon-purple));
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 40px rgba(0, 212, 255, 0.3);
+        }
+
+        .header-link:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 50px rgba(0, 212, 255, 0.5);
+        }
+
+        .section {
+            margin: 100px 0;
+            opacity: 0;
+            transform: translateY(80px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            margin-bottom: 60px;
+            text-align: center;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 30px 80px rgba(0, 212, 255, 0.3);
+            border: 1px solid rgba(0, 212, 255, 0.5);
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--electric-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: inline-block;
+        }
+
+        .card-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .card-description {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--text-gray);
+            margin-bottom: 25px;
+        }
+
+        .card-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .skill-tag {
+            padding: 8px 16px;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: var(--electric-blue);
+        }
+
+        .card-links {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .card-link {
+            flex: 1;
+            padding: 12px 20px;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .card-link.instagram {
+            background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+            color: white;
+        }
+
+        .card-link.telegram {
+            background: linear-gradient(135deg, #0088cc, #00aaff);
+            color: white;
+        }
+
+        .portfolio-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, var(--electric-blue), var(--neon-purple));
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .portfolio-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 212, 255, 0.5);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0 20px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--electric-blue), var(--neon-purple), var(--crimson-red));
+            border-radius: 10px;
+            box-shadow: 0 0 20px var(--electric-blue);
+        }
+
+        /* Back Button */
+        .back-to-home {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            z-index: 1000;
+            padding: 12px 30px;
+            background: rgba(0, 212, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--electric-blue);
+            color: white;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .back-to-home:hover {
+            background: var(--electric-blue);
+            transform: translateX(-5px);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 80px 20px;
+            margin-top: 100px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-text {
+            font-size: 1rem;
+            color: var(--text-gray);
+            margin-bottom: 20px;
+        }
+
+        /* Portfolio Specific Styles */
+        .portfolio-page {
+            padding: 80px 20px;
+            background: #fafafa;
+            min-height: 100vh;
+        }
+
+        .portfolio-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .portfolio-title {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 900;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--electric-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .portfolio-subtitle {
+            font-size: 1.5rem;
+            color: #666;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-title {
+                font-size: 2.5rem;
+                letter-spacing: 2px;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .back-to-home {
+                top: 20px;
+                left: 20px;
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loader"></div>
+        <div class="loading-text">LOADING EXCELLENCE...</div>
+    </div>
+
+    <!-- Particles Background -->
+    <div id="particles-js"></div>
+    <div class="bg-gradient"></div>
+
+    <!-- HOME PAGE -->
+    <div id="homePage" class="page active">
+        <div class="container">
+            <header>
+                <h1 class="header-title">ORIS STUDIO</h1>
+                <p class="header-subtitle">Premium Digital Solutions & Creative Excellence</p>
+                <div class="header-links">
+                    <a href="https://www.instagram.com/oris_studio777" target="_blank" class="header-link">
+                        <i class="fab fa-instagram"></i> Instagram
+                    </a>
+                    <a href="https://t.me/portfolioalljob" target="_blank" class="header-link">
+                        <i class="fab fa-telegram"></i> Telegram
+                    </a>
+                </div>
+            </header>
+
+            <!-- Copywriting -->
+            <section class="section">
+                <h2 class="section-title">
+                    <span style="background: linear-gradient(135deg, var(--electric-blue), var(--neon-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                        COPYWRITING
+                    </span>
+                </h2>
+                <div class="cards-grid">
+                    <div class="card floating">
+                        <div class="card-icon"><i class="fas fa-pen-fancy"></i></div>
+                        <h3 class="card-title">Persuasive Content</h3>
+                        <p class="card-description">
+                            Har bir so'z – ta'sir. Brendingiz uchun yurak qoqadigan, sotuvchi va esda qoladigan matnlar.
+                        </p>
+                        <div class="card-skills">
+                            <span class="skill-tag">Sales Copy</span>
+                            <span class="skill-tag">Email Marketing</span>
+                            <span class="skill-tag">SEO Content</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 95%;"></div>
+                        </div>
+                        <div class="card-links">
+                            <a href="https://www.instagram.com/oris_studio777" target="_blank" class="card-link instagram">
+                                <i class="fab fa-instagram"></i> Instagram
+                            </a>
+                            <a href="https://t.me/portfolioalljob" target="_blank" class="card-link telegram">
+                                <i class="fab fa-telegram"></i> Telegram
+                            </a>
+                        </div>
+                        <button onclick="showPage('copywriting')" class="portfolio-btn">
+                            <i class="fas fa-folder-open"></i> VIEW PORTFOLIO
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Graphic Design -->
+            <section class="section">
+                <h2 class="section-title">
+                    <span style="background: linear-gradient(135deg, var(--neon-purple), var(--crimson-red)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                        GRAPHIC DESIGN
+                    </span>
+                </h2>
+                <div class="cards-grid">
+                    <div class="card floating">
+                        <div class="card-icon"><i class="fas fa-palette"></i></div>
+                        <h3 class="card-title">Visual Masterpieces</h3>
+                        <p class="card-description">
+                            Ko'z qoqadigan, professional dizaynlar. Logo, banner, poster, social media – premium quality.
+                        </p>
+                        <div class="card-skills">
+                            <span class="skill-tag">Logo Design</span>
+                            <span class="skill-tag">Brand Identity</span>
+                            <span class="skill-tag">Print Design</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 92%;"></div>
+                        </div>
+                        <div class="card-links">
+                            <a href="https://www.instagram.com/oris_studio777" target="_blank" class="card-link instagram">
+                                <i class="fab fa-instagram"></i> Instagram
+                            </a>
+                            <a href="https://t.me/portfolioalljob" target="_blank" class="card-link telegram">
+                                <i class="fab fa-telegram"></i> Telegram
+                            </a>
+                        </div>
+                        <button onclick="showPage('design')" class="portfolio-btn" style="background: linear-gradient(135deg, var(--neon-purple), var(--crimson-red));">
+                            <i class="fas fa-images"></i> VIEW PORTFOLIO
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- UX/UI -->
+            <section class="section">
+                <h2 class="section-title">
+                    <span style="background: linear-gradient(135deg, var(--crimson-red), var(--electric-blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                        UX/UI DESIGN
+                    </span>
+                </h2>
+                <div class="cards-grid">
+                    <div class="card floating">
+                        <div class="card-icon"><i class="fas fa-mobile-alt"></i></div>
+                        <h3 class="card-title">User Experience Excellence</h3>
+                        <p class="card-description">
+                            Foydalanuvchi uchun qulay, chiroyli va zamonaviy interfacelar. Professional yondashuv.
+                        </p>
+                        <div class="card-skills">
+                            <span class="skill-tag">Wireframing</span>
+                            <span class="skill-tag">Prototyping</span>
+                            <span class="skill-tag">Figma Expert</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 90%;"></div>
+                        </div>
+                        <div class="card-links">
+                            <a href="https://www.instagram.com/oris_studio777" target="_blank" class="card-link instagram">
+                                <i class="fab fa-instagram"></i> Instagram
+                            </a>
+                            <a href="https://t.me/portfolioalljob" target="_blank" class="card-link telegram">
+                                <i class="fab fa-telegram"></i> Telegram
+                            </a>
+                        </div>
+                        <button onclick="showPage('uxui')" class="portfolio-btn" style="background: linear-gradient(135deg, var(--crimson-red), var(--electric-blue));">
+                            <i class="fas fa-laptop-code"></i> VIEW PORTFOLIO
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SMM -->
+            <section class="section">
+                <h2 class="section-title">
+                    <span style="background: linear-gradient(135deg, var(--electric-blue), var(--crimson-red)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                        SOCIAL MEDIA MARKETING
+                    </span>
+                </h2>
+                <div class="cards-grid">
+                    <div class="card floating">
+                        <div class="card-icon"><i class="fas fa-hashtag"></i></div>
+                        <h3 class="card-title">Social Growth Strategy</h3>
+                        <p class="card-description">
+                            Brendingizni ijtimoiy tarmoqlarda ko'taramiz. Strategiya, content, analytics – to'liq yechim.
+                        </p>
+                        <div class="card-skills">
+                            <span class="skill-tag">Content Strategy</span>
+                            <span class="skill-tag">Analytics</span>
+                            <span class="skill-tag">Paid Ads</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 88%;"></div>
+                        </div>
+                        <div class="card-links">
+                            <a href="https://www.instagram.com/oris_studio777" target="_blank" class="card-link instagram">
+                                <i class="fab fa-instagram"></i> Instagram
+                            </a>
+                            <a href="https://t.me/portfolioalljob" target="_blank" class="card-link telegram">
+                                <i class="fab fa-telegram"></i> Telegram
+                            </a>
+                        </div>
+                        <button onclick="showPage('smm')" class="portfolio-btn" style="background: linear-gradient(135deg, var(--electric-blue), var(--crimson-red));">
+                            <i class="fas fa-chart-line"></i> VIEW PORTFOLIO
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Developer -->
+            <section class="section">
+                <h2 class="section-title">
+                    <span style="background: linear-gradient(135deg, var(--neon-purple), var(--electric-blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                        WEB DEVELOPMENT
+                    </span>
+                </h2>
+                <div class="cards-grid">
+                    <div class="card floating">
+                        <div class="card-icon"><i class="fas fa-code"></i></div>
+                        <h3 class="card-title">Full-Stack Solutions</h3>
+                        <p class="card-description">
+                            Zamonaviy, tez va xavfsiz web ilovalar. React, Node.js, databases – professional kod.
+                        </p>
+                        <div class="card-skills">
+                            <span class="skill-tag">React.js</span>
+                            <span class="skill-tag">Node.js</span>
+                            <span class="skill-tag">MongoDB</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 94%;"></div>
+                        </div>
+                        <div class="card-links">
+                            <a href="https://www.instagram.com/oris_studio777" target="_blank" class="card-link instagram">
+                                <i class="fab fa-instagram"></i> Instagram
+                            </a>
+                            <a href="https://t.me/portfolioalljob" target="_blank" class="card-link telegram">
+                                <i class="fab fa-telegram"></i> Telegram
+                            </a>
+                        </div>
+                        <button onclick="showPage('developer')" class="portfolio-btn" style="background: linear-gradient(135deg, var(--neon-purple), var(--electric-blue));">
+                            <i class="fas fa-code"></i> VIEW PORTFOLIO
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <footer>
+                <p class="footer-text">© 2025 ORIS STUDIO - Premium Digital Excellence</p>
+                <p class="footer-text">Crafted with passion, precision & innovation</p>
+            </footer>
+        </div>
+    </div>
+
+    <!-- COPYWRITING PAGE -->
+    <div id="copywritingPage" class="page">
+        <button onclick="showPage('home')" class="back-to-home">
+            <i class="fas fa-arrow-left"></i> Ortga
+        </button>
+        <div class="portfolio-page" style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: white;">
+            <div class="container">
+                <div class="portfolio-header">
+                    <h1 class="portfolio-title" style="color: white;">Copywriting Portfolio</h1>
+                    <p class="portfolio-subtitle" style="color: #aaa;">Words that sell, stories that connect</p>
+                </div>
+                <div style="background: white; padding: 60px 40px; border-radius: 20px; color: #333; margin-bottom: 40px;">
+                    <h2 style="font-size: 2.5rem; margin-bottom: 30px; color: #1a1a2e;">Featured Work</h2>
+                    
+                    <div style="margin-bottom: 50px; padding: 40px; background: #f8f9fa; border-radius: 15px; border-left: 5px solid #667eea;">
+                        <h3 style="font-size: 2rem; margin-bottom: 15px; color: #667eea;">E-Commerce Landing Page</h3>
+                        <p style="font-size: 1.1rem; line-height: 1.8; color: #555; margin-bottom: 20px;">
+                            Premium fashion brend uchun landing page copy yaratdim. Conversion rate 43% oshirdi, 
+                            engagement 2.5x ko'paydi va average time on page 67% ortdi.
+                        </p>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px; margin-top: 30px;">
+                            <div style="text-align: center; padding: 20px; background: white; border-radius: 10px;">
+                                <div style="font-size: 2.5rem; font-weight: 900; color: #667eea;">43%</div>
+                                <div style="font-size: 0.9rem; color: #666;">Conversion ↑</div>
+                            </div>
+                            <div style="text-align: center; padding: 20px; background: white; border-radius: 10px;">
+                                <div style="font-size: 2.5rem; font-weight: 900; color: #667eea;">2.5x</div>
+                                <div style="font-size: 0.9rem; color: #666;">Engagement</div>
+                            </div>
+                            <div style="text-align: center; padding: 20px; background: white; border-radius: 10px;">
+                                <div style="font-size: 2.5rem; font-weight: 900; color: #667eea;">67%</div>
+                                <div style="font-size: 0.9rem; color: #666;">Time on Page ↑</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 50px; padding: 40px; background: #f8f9fa; border-radius: 15px; border-left: 5px solid #f093fb;">
+                        <h3 style="font-size: 2rem; margin-bottom: 15px; color: #f093fb;">Email Marketing Campaign</h3>
+                        <p style="font-size: 1.1rem; line-height: 1.8; color: #555; margin-bottom: 20px;">
+                            SaaS product launch uchun 6-email sequence yaratdim. 58% open rate, 1200+ sign-ups, 
+                            va 23% click-through rate bilan muvaffaqiyatli campaign bo'ldi.
+                        </p>
+                        <div style="background: #fff3cd; padding: 25px; border-radius: 10px; border-left: 4px solid #f093fb; margin-top: 20px;">
+                            <p style="font-style: italic; font-size: 1.1rem; color: #555;">
+                                "Email 1: 'Sizning eng katta problem emas, bu siz o'ylaganingiz.'<br>
+                                Email 6: 'Endi yechim tayyor. Qadam tashlash vaqti.'"
+                            </p>
+                        </div>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 60px; padding: 50px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 20px;">
+                        <h3 style="font-size: 2rem; color: white; margin-bottom: 20px;">Ready to elevate your content?</h3>
+                        <div style="display: flex; justify-content: center; gap: 20px; margin-top: 30px; flex-wrap: wrap;">
+                            <a href="https://www.instagram.com/oris_studio777" target="_blank" style="padding: 15px 40px; background: linear-gradient(135deg, #f09433, #bc1888); color: white; text-decoration: none; border-radius: 50px; font-weight: 700;">
+                                <i class="fab fa-instagram"></i> Instagram
+                            </a>
+                            <a href="https://t.me/portfolioalljob" target="_blank" style="padding: 15px 40px; background: linear-gradient(135deg, #0088cc, #00aaff); color: white; text-decoration: none; border-radius: 50px; font-weight: 700;">
+                                <i class="fab fa-telegram"></i> Telegram
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DESIGN PAGE -->
+    <div id="designPage" class="page">
+        <button onclick="showPage('home')" class="back-to-home">
+            <i class="fas fa-arrow-left"></i> Ortga
+        </button>
+        <div class="portfolio-page" style="background: #0f0f0f;">
+            <div class="container">
+                <div class="portfolio-header">
+                    <h1 class="portfolio-title">Graphic Design Portfolio</h1>
+                    <p class="portfolio-subtitle" style="color: #999;">Where creativity meets excellence</p>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+                    <div style="aspect-ratio: 1; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: white; transition: transform 0.3s;">
+                        <i class="fas fa-pen-nib"></i>
+                    </div>
+                    <div style="aspect-ratio: 1; background: linear-gradient(135deg, #f093fb, #f5576c); border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: white;">
+                        <i class="fas fa-swatchbook"></i>
+                    </div>
+                    <div style="aspect-ratio: 1; background: linear-gradient(135deg, #4facfe, #00f2fe); border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: white;">
+                        <i class="fab fa-instagram"></i>
+                    </div>
+                    <div style="aspect-ratio: 1; background: linear-gradient(135deg, #43e97b, #38f9d7); border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: white;">
+                        <i class="fas fa-newspaper"></i>
+                    </div>
+                    <div style="aspect-ratio: 1; background: linear-gradient(135deg, #fa709a, #fee140); border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: white;">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                    <div style="aspect-ratio: 1; background: linear-gradient(135deg, #30cfd0, #330867); border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: white;">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                </div>
+
+                <div style="background: linear-gradient(135deg, #667eea, #764ba2); padding: 80px 40px; margin: 60px 0; border-radius: 20px; text-align: center; color: white;">
+                    <h2 style="font-size: 2.5rem; margin-bottom: 40px;">Design By Numbers</h2>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px;">
+                        <div>
+                            <div style="font-size: 4rem; font-weight: 900;">500+</div>
+                            <div style="font-size: 1.1rem; opacity: 0.9;">Projects</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 4rem; font-weight: 900;">150+</div>
+                            <div style="font-size: 1.1rem; opacity: 0.9;">Happy Clients</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 4rem; font-weight: 900;">98%</div>
+                            <div style="font-size: 1.1rem; opacity: 0.9;">Satisfaction</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 4rem; font-weight: 900;">5+</div>
+                            <div style="font-size: 1.1rem; opacity: 0.9;">Years Experience</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: center; padding: 60px 40px; background: white; border-radius: 20px;">
+                    <h2 style="font-size: 2.5rem; margin-bottom: 30px; color: #0f0f0f;">Ready to elevate your brand?</h2>
+                    <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+                        <a href="https://www.instagram.com/oris_studio777" target="_blank" style="padding: 18px 45px; background: linear-gradient(135deg, #f09433, #bc1888); color: white; text-decoration: none; border-radius: 50px; font-weight: 800; font-size: 1.1rem;">
+                            <i class="fab fa-instagram"></i> View More
+                        </a>
+                        <a href="https://t.me/portfolioalljob" target="_blank" style="padding: 18px 45px; background: linear-gradient(135deg, #0088cc, #00aaff); color: white; text-decoration: none; border-radius: 50px; font-weight: 800; font-size: 1.1rem;">
+                            <i class="fab fa-telegram"></i> Let's Talk
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- UX/UI PAGE -->
+    <div id="uxuiPage" class="page">
+        <button onclick="showPage('home')" class="back-to-home">
+            <i class="fas fa-arrow-left"></i> Ortga
+        </button>
+        <div class="portfolio-page">
+            <div class="container">
+                <div class="portfolio-header">
+                    <h1 class="portfolio-title">UX/UI Design Portfolio</h1>
+                    <p class="portfolio-subtitle">Creating experiences that users love</p>
+                </div>
+
+                <div style="background: white; padding: 60px 40px; border-radius: 20px; margin-bottom: 40px;">
+                    <h2 style="font-size: 2.5rem; margin-bottom: 40px; color: #1a1a1a; text-align: center;">Design Process</h2>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px;">
+                        <div style="text-align: center; padding: 30px; border-radius: 15px; background: #f8f9fa;">
+                            <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 900; margin: 0 auto 20px;">1</div>
+                            <h3 style="font-size: 1.3rem; margin-bottom: 10px;">Research</h3>
+                            <p style="color: #666; font-size: 0.95rem;">User interviews, competitor analysis</p>
+                        </div>
+                        <div style="text-align: center; padding: 30px; border-radius: 15px; background: #f8f9fa;">
+                            <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 900; margin: 0 auto 20px;">2</div>
+                            <h3 style="font-size: 1.3rem; margin-bottom: 10px;">Ideate</h3>
+                            <p style="color: #666; font-size: 0.95rem;">Wireframes, user flows</p>
+                        </div>
+                        <div style="text-align: center; padding: 30px; border-radius: 15px; background: #f8f9fa;">
+                            <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 900; margin: 0 auto 20px;">3</div>
+                            <h3 style="font-size: 1.3rem; margin-bottom: 10px;">Design</h3>
+                            <p style="color: #666; font-size: 0.95rem;">High-fidelity mockups</p>
+                        </div>
+                        <div style="text-align: center; padding: 30px; border-radius: 15px; background: #f8f9fa;">
+                            <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 900; margin: 0 auto 20px;">4</div>
+                            <h3 style="font-size: 1.3rem; margin-bottom: 10px;">Test</h3>
+                            <p style="color: #666; font-size: 0.95rem;">User testing, iterations</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background: white; padding: 60px 40px; border-radius: 20px; margin-bottom: 40px;">
+                    <h3 style="font-size: 2.2rem; margin-bottom: 30px; color: #667eea;">Shopping App Redesign</h3>
+                    <div style="background: linear-gradient(135deg, #667eea, #764ba2); padding: 60px; border-radius: 20px; text-align: center; margin: 30px 0;">
+                        <div style="width: 280px; height: 560px; background: #1a1a1a; border-radius: 40px; padding: 12px; margin: 0 auto; box-shadow: 0 30px 80px rgba(0,0,0,0.4);">
+                            <div style="width: 100%; height: 100%; background: white; border-radius: 32px; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: #667eea;">
+                                <i class="fas fa-shopping-bag"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="background: linear-gradient(135deg, #667eea, #764ba2); padding: 40px; border-radius: 15px; color: white; margin-top: 30px;">
+                        <h4 style="font-size: 1.8rem; margin-bottom: 20px;">Results</h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px; text-align: center;">
+                            <div>
+                                <div style="font-size: 3rem; font-weight: 900;">65%</div>
+                                <div style="font-size: 0.9rem;">More Conversions</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 3rem; font-weight: 900;">43%</div>
+                                <div style="font-size: 0.9rem;">Less Cart Abandonment</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 3rem; font-weight: 900;">4.8★</div>
+                                <div style="font-size: 0.9rem;">App Store Rating</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: center; padding: 60px 40px; background: white; border-radius: 20px;">
+                    <h2 style="font-size: 2.5rem; margin-bottom: 20px;">Let's create something amazing</h2>
+                    <div style="display: flex; justify-content: center; gap: 20px; margin-top: 40px; flex-wrap: wrap;">
+                        <a href="https://www.instagram.com/oris_studio777" target="_blank" style="padding: 18px 45px; background: linear-gradient(135deg, #f09433, #bc1888); color: white; text-decoration: none; border-radius: 12px; font-weight: 700; font-size: 1.1rem;">
+                            <i class="fab fa-instagram"></i> Instagram
+                        </a>
+                        <a href="https://t.me/portfolioalljob" target="_blank" style="padding: 18px 45px; background: linear-gradient(135deg, #0088cc, #00aaff); color: white; text-decoration: none; border-radius: 12px; font-weight: 700; font-size: 1.1rem;">
+                            <i class="fab fa-telegram"></i> Telegram
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SMM PAGE -->
+    <div id="smmPage" class="page">
+        <button onclick="showPage('home')" class="back-to-home">
+            <i class="fas fa-arrow-left"></i> Ortga
+        </button>
+        <div class="portfolio-page">
+            <div class="container">
+                <div class="portfolio-header">
+                    <h1 class="portfolio-title">Social Media Marketing</h1>
+                    <p class="portfolio-subtitle">Growing brands through strategic social presence</p>
+                </div>
+
+                <div style="background: white; padding: 50px; border-radius: 20px; margin-bottom: 40px;">
+                    <div style="display: flex; align-items: center; gap: 40px; margin-bottom: 40px; flex-wrap: wrap;">
+                        <div style="width: 150px; height: 150px; background: linear-gradient(135deg, #405de6, #c13584, #fd1d1d); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: white;">
+                            <i class="fas fa-hashtag"></i>
+                        </div>
+                        <div style="flex: 1; min-width: 300px;">
+                            <h2 style="font-size: 2rem; margin-bottom: 20px;">ORIS STUDIO SMM</h2>
+                            <div style="display: flex; gap: 40px; margin-bottom: 20px;">
+                                <div>
+                                    <div style="font-size: 1.8rem; font-weight: 700;">50+</div>
+                                    <div style="color: #8e8e8e; font-size: 0.9rem;">Campaigns</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 1.8rem; font-weight: 700;">2M+</div>
+                                    <div style="color: #8e8e8e; font-size: 0.9rem;">Reach</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 1.8rem; font-weight: 700;">8.5%</div>
+                                    <div style="color: #8e8e8e; font-size: 0.9rem;">Avg Engagement</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; margin-top: 40px;">
+                        <div style="aspect-ratio: 1; background: linear-gradient(135deg, #f093fb, #f5576c); display: flex; align-items: center; justify-content: center; font-size: 3rem; color: white;">
+                            <i class="fab fa-instagram"></i>
+                        </div>
+                        <div style="aspect-ratio: 1; background: linear-gradient(135deg, #4facfe, #00f2fe); display: flex; align-items: center; justify-content: center; font-size: 3rem; color: white;">
+                            <i class="fab fa-facebook"></i>
+                        </div>
+                        <div style="aspect-ratio: 1; background: linear-gradient(135deg, #667eea, #764ba2); display: flex; align-items: center; justify-content: center; font-size: 3rem; color: white;">
+                            <i class="fab fa-tiktok"></i>
+                        </div>
+                        <div style="aspect-ratio: 1; background: linear-gradient(135deg, #fa709a, #fee140); display: flex; align-items: center; justify-content: center; font-size: 3rem; color: white;">
+                            <i class="fas fa-image"></i>
+                        </div>
+                        <div style="aspect-ratio: 1; background: linear-gradient(135deg, #43e97b, #38f9d7); display: flex; align-items: center; justify-content: center; font-size: 3rem; color: white;">
+                            <i class="fas fa-video"></i>
+                        </div>
+                        <div style="aspect-ratio: 1; background: linear-gradient(135deg, #f093fb, #f5576c); display: flex; align-items: center; justify-content: center; font-size: 3rem; color: white;">
+                            <i class="fas fa-camera"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background: linear-gradient(135deg, #667eea, #764ba2); padding: 80px 40px; border-radius: 20px; color: white; margin-bottom: 40px;">
+                    <h2 style="font-size: 2.5rem; margin-bottom: 30px; text-align: center;">Campaign Success</h2>
+                    <div style="background: rgba(255,255,255,0.1); padding: 35px; border-radius: 15px; backdrop-filter: blur(10px);">
+                        <p style="font-size: 1.2rem; line-height: 1.7; font-style: italic; margin-bottom: 20px;">
+                            "Bizning Instagram'imiz ölgan edi. ORIS Studio 3 oy ichida bizni 50K followers'ga olib bordi va engagement 8% ga ko'tardi. Incredible work!"
+                        </p>
+                        <div style="font-weight: 700; font-size: 1.1rem;">Sarah Ahmed</div>
+                        <div style="font-size: 0.9rem; opacity: 0.8;">Fashion Brand Owner</div>
+                    </div>
+                </div>
+
+                <div style="text-align: center; padding: 60px 40px; background: white; border-radius: 20px;">
+                    <h2 style="font-size: 2.2rem; margin-bottom: 20px;">Ready to grow your social?</h2>
+                    <div style="display: flex; justify-content: center; gap: 20px; margin-top: 35px; flex-wrap: wrap;">
+                        <a href="https://www.instagram.com/oris_studio777" target="_blank" style="padding: 15px 40px; background: linear-gradient(135deg, #f09433, #bc1888); color: white; text-decoration: none; border-radius: 25px; font-weight: 700;">
+                            <i class="fab fa-instagram"></i> Follow us
+                        </a>
+                        <a href="https://t.me/portfolioalljob" target="_blank" style="padding: 15px 40px; background: linear-gradient(135deg, #0088cc, #00aaff); color: white; text-decoration: none; border-radius: 25px; font-weight: 700;">
+                            <i class="fab fa-telegram"></i> Get Started
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DEVELOPER PAGE -->
+    <div id="developerPage" class="page">
+        <button onclick="showPage('home')" class="back-to-home">
+            <i class="fas fa-arrow-left"></i> Ortga
+        </button>
+        <div class="portfolio-page" style="background: #0d1117;">
+            <div class="container">
+                <div class="portfolio-header">
+                    <h1 class="portfolio-title" style="color: #58a6ff;">Web Development Portfolio</h1>
+                    <p class="portfolio-subtitle" style="color: #8b949e;">Building the future, one line at a time</p>
+                </div>
+
+                <div style="background: #161b22; border: 1px solid #30363d; border-radius: 15px; padding: 40px; margin-bottom: 40px;">
+                    <div style="background: #0d1117; padding: 12px 15px; border-radius: 8px 8px 0 0; display: flex; gap: 8px; margin: -40px -40px 30px -40px;">
+                        <div style="width: 12px; height: 12px; background: #ff5f56; border-radius: 50%;"></div>
+                        <div style="width: 12px; height: 12px; background: #ffbd2e; border-radius: 50%;"></div>
+                        <div style="width: 12px; height: 12px; background: #27c93f; border-radius: 50%;"></div>
+                    </div>
+                    <div style="font-family: 'Fira Code', monospace; color: #58a6ff;">
+                        <div style="margin-bottom: 15px;">
+                            <span style="color: #7ee787;">$</span> <span>whoami</span>
+                        </div>
+                        <div style="color: #7ee787; margin-left: 30px; margin-bottom: 20px;">
+                            Full-Stack Developer | Code Architect | Problem Solver
+                        </div>
+                        <div style="margin-bottom: 15px;">
+                            <span style="color: #7ee787;">$</span> <span>cat skills.txt</span>
+                        </div>
+                        <div style="color: #8b949e; margin-left: 30px;">
+                            → Frontend: React, Next.js, Vue, TypeScript<br>
+                            → Backend: Node.js, Python, Django, FastAPI<br>
+                            → Database: MongoDB, PostgreSQL, Redis<br>
+                            → DevOps: Docker, AWS, CI/CD, Kubernetes
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px; margin-bottom: 40px;">
+                    <div style="background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 25px; transition: all 0.3s;">
+                        <div style="font-size: 2.5rem; margin-bottom: 15px; color: #7ee787;"><i class="fab fa-react"></i></div>
+                        <div style="font-size: 1.3rem; font-weight: 700; margin-bottom: 10px; color: #c9d1d9;">React / Next.js</div>
+                        <div style="font-size: 0.85rem; color: #8b949e;">⬢⬢⬢⬢⬢ Expert</div>
+                    </div>
+                    <div style="background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 25px;">
+                        <div style="font-size: 2.5rem; margin-bottom: 15px; color: #7ee787;"><i class="fab fa-node-js"></i></div>
+                        <div style="font-size: 1.3rem; font-weight: 700; margin-bottom: 10px; color: #c9d1d9;">Node.js / Express</div>
+                        <div style="font-size: 0.85rem; color: #8b949e;">⬢⬢⬢⬢⬢ Expert</div>
+                    </div>
+                    <div style="background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 25px;">
+                        <div style="font-size: 2.5rem; margin-bottom: 15px; color: #7ee787;"><i class="fab fa-python"></i></div>
+                        <div style="font-size: 1.3rem; font-weight: 700; margin-bottom: 10px; color: #c9d1d9;">Python / Django</div>
+                        <div style="font-size: 0.85rem; color: #8b949e;">⬢⬢⬢⬢⬡ Advanced</div>
+                    </div>
+                    <div style="background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 25px;">
+                        <div style="font-size: 2.5rem; margin-bottom: 15px; color: #7ee787;"><i class="fas fa-database"></i></div>
+                        <div style="font-size: 1.3rem; font-weight: 700; margin-bottom: 10px; color: #c9d1d9;">MongoDB / SQL</div>
+                        <div style="font-size: 0.85rem; color: #8b949e;">⬢⬢⬢⬢⬢ Expert</div>
+                    </div>
+                </div>
+
+                <div style="background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 40px; margin-bottom: 40px;">
+                    <h3 style="color: #58a6ff; font-size: 2rem; margin-bottom: 30px;"><i class="fas fa-rocket"></i> E-Commerce Platform</h3>
+                    <p style="color: #8b949e; font-size: 1.1rem; line-height: 1.7; margin-bottom: 20px;">
+                        Full-stack e-commerce solution with real-time inventory, payment processing, admin dashboard, and analytics. Built with Next.js, Node.js, and MongoDB.
+                    </p>
+                    <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;">
+                        <span style="padding: 6px 14px; background: #1f6feb; color: white; border-radius: 20px; font-size: 0.8rem;">Next.js</span>
+                        <span style="padding: 6px 14px; background: #1f6feb; color: white; border-radius: 20px; font-size: 0.8rem;">Node.js</span>
+                        <span style="padding: 6px 14px; background: #1f6feb; color: white; border-radius: 20px; font-size: 0.8rem;">MongoDB</span>
+                        <span style="padding: 6px 14px; background: #1f6feb; color: white; border-radius: 20px; font-size: 0.8rem;">AWS</span>
+                    </div>
+                    <div style="background: #0d1117; border: 1px solid #30363d; border-radius: 6px; padding: 20px; font-family: 'Fira Code', monospace;">
+                        <div style="color: #8b949e;">// Real-time inventory sync</div>
+                        <div style="color: #c9d1d9; margin-top: 5px;">
+                            <span style="color: #ff7b72;">const</span> updateInventory = <span style="color: #ff7b72;">async</span> (productId) => {
+                        </div>
+                        <div style="color: #c9d1d9; margin-left: 20px;">
+                            <span style="color: #ff7b72;">await</span> socket.emit(<span style="color: #a5d6ff;">'inventory:update'</span>, { productId });
+                        </div>
+                        <div style="color: #c9d1d9;">};</div>
+                    </div>
+                </div>
+
+                <div style="background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 40px; margin-bottom: 40px;">
+                    <h3 style="color: #58a6ff; font-size: 2rem; margin-bottom: 20px;">git log --stat</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 25px; text-align: center;">
+                        <div>
+                            <div style="font-size: 3rem; font-weight: 700; color: #7ee787;">100+</div>
+                            <div style="color: #8b949e; font-size: 0.9rem;">Projects</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 3rem; font-weight: 700; color: #7ee787;">50K+</div>
+                            <div style="color: #8b949e; font-size: 0.9rem;">Lines of Code</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 3rem; font-weight: 700; color: #7ee787;">5+</div>
+                            <div style="color: #8b949e; font-size: 0.9rem;">Years Experience</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: center; padding: 60px 40px; background: #161b22; border: 1px solid #30363d; border-radius: 8px;">
+                    <h2 style="color: #58a6ff; font-size: 2rem; margin-bottom: 20px;">$ git clone collaboration</h2>
+                    <p style="color: #8b949e; margin-bottom: 30px;">Ready to build something amazing?</p>
+                    <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+                        <a href="https://www.instagram.com/oris_studio777" target="_blank" style="padding: 15px 40px; background: linear-gradient(135deg, #f09433, #bc1888); color: white; text-decoration: none; border-radius: 6px; font-weight: 700;">
+                            <i class="fab fa-instagram"></i> Instagram
+                        </a>
+                        <a href="https://t.me/portfolioalljob" target="_blank" style="padding: 15px 40px; background: linear-gradient(135deg, #0088cc, #00aaff); color: white; text-decoration: none; border-radius: 6px; font-weight: 700;">
+                            <i class="fab fa-telegram"></i> Telegram
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Particles.js -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+    <script>
+        // Loading Screen
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loadingScreen').classList.add('hidden');
+            }, 2000);
+        });
+
+        // Particles.js
+        particlesJS('particles-js', {
+            particles: {
+                number: { value: 80, density: { enable: true, value_area: 800 } },
+                color: { value: ['#00d4ff', '#b800ff', '#ff0055'] },
+                shape: { type: 'circle' },
+                opacity: { value: 0.5, random: true },
+                size: { value: 3, random: true },
+                line_linked: {
+                    enable: true,
+                    distance: 150,
+                    color: '#00d4ff',
+                    opacity: 0.2,
+                    width: 1
+                },
+                move: {
+                    enable: true,
+                    speed: 2,
+                    direction: 'none',
+                    random: true,
+                    straight: false,
+                    out_mode: 'out',
+                    bounce: false
+                }
+            },
+            interactivity: {
+                detect_on: 'canvas',
+                events: {
+                    onhover: { enable: true, mode: 'repulse' },
+                    onclick: { enable: true, mode: 'push' },
+                    resize: true
+                },
+                modes: {
+                    repulse: { distance: 100, duration: 0.4 },
+                    push: { particles_nb: 4 }
+                }
+            },
+            retina_detect: true
+        });
+
+        // Scroll Animation
+        const observerOptions = {
+            threshold: 0.2,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.section').forEach(section => {
+            observer.observe(section);
+        });
+
+        // Page Navigation
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+
+            // Show selected page
+            const pageMap = {
+                'home': 'homePage',
+                'copywriting': 'copywritingPage',
+                'design': 'designPage',
+                'uxui': 'uxuiPage',
+                'smm': 'smmPage',
+                'developer': 'developerPage'
+            };
+
+            const targetPage = document.getElementById(pageMap[pageId]);
+            if (targetPage) {
+                targetPage.classList.add('active');
+                window.scrollTo(0, 0);
+            }
+        }
+    </script>
+</body>
+</html>
